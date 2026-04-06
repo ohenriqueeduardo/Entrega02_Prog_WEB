@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/test.ts",
-    "setup": "ts-node src/db/setup.ts"
+    "setup": "ts-node src/db/setup.ts",
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
     "better-sqlite3": "^9.0.0",
