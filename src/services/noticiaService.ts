@@ -9,7 +9,7 @@ export function criarNoticia(titulo: string, texto: string, cidadeId: number) {
 
 export function listarNoticias(ordem: 'ASC' | 'DESC') {
   return rawDb.prepare(`
-    SELECT noticia.id, titulo, data_criacao, cidade.nome as cidade
+    SELECT noticia.id, titulo, data_criacao, cidade.nome AS cidade
     FROM noticia
     JOIN cidade ON noticia.cidade_id = cidade.id
     ORDER BY data_criacao ${ordem}
@@ -18,7 +18,7 @@ export function listarNoticias(ordem: 'ASC' | 'DESC') {
 
 export function listarPorEstado(ufId: number) {
   return rawDb.prepare(`
-    SELECT titulo, cidade.nome as cidade
+    SELECT noticia.id, noticia.titulo, cidade.nome AS cidade
     FROM noticia
     JOIN cidade ON noticia.cidade_id = cidade.id
     WHERE cidade.uf_id = ?
@@ -27,10 +27,26 @@ export function listarPorEstado(ufId: number) {
 
 export function listarAgrupado() {
   return rawDb.prepare(`
-    SELECT uf.sigla, noticia.titulo, cidade.nome as cidade
+    SELECT uf.sigla, noticia.titulo, cidade.nome AS cidade
     FROM noticia
     JOIN cidade ON noticia.cidade_id = cidade.id
-    JOIN uf ON cidade.uf_id = uf.id
+    JOIN uf     ON cidade.uf_id = uf.id
     ORDER BY uf.sigla
   `).all();
+}
+
+export function buscarNoticiaPorId(id: number) {
+  return rawDb.prepare(`
+    SELECT noticia.id, noticia.titulo, noticia.texto,
+           noticia.data_criacao, cidade.nome AS cidade
+    FROM noticia
+    JOIN cidade ON noticia.cidade_id = cidade.id
+    WHERE noticia.id = ?
+  `).get(id) as {
+    id: number;
+    titulo: string;
+    texto: string;
+    data_criacao: string;
+    cidade: string;
+  } | undefined;
 }
