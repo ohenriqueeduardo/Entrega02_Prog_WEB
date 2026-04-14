@@ -39,6 +39,18 @@ db.exec(`
     FOREIGN KEY (tag_id)     REFERENCES tag(id),
     UNIQUE (noticia_id, tag_id)
   );
+  CREATE TABLE IF NOT EXISTS tag (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL UNIQUE
+  );
+
+  CREATE TABLE IF NOT EXISTS noticia_tag (
+    noticia_id INTEGER,
+    tag_id INTEGER,
+    PRIMARY KEY (noticia_id, tag_id),
+    FOREIGN KEY (noticia_id) REFERENCES noticia(id),
+    FOREIGN KEY (tag_id) REFERENCES tag(id)
+  );
 `);
 
 console.log('✅ Tabelas criadas com sucesso!');
